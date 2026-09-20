@@ -44,8 +44,8 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         env:
-          # If you have your Render URL, you can set VITE_API_BASE_URL secret or fallback to default
-          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://data-qa-backend.onrender.com/api/v1' }}
+          # Use Render backend URL
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL || 'https://data-q-a.onrender.com/api/v1' }}
         run: npm run build
 
       - name: Setup Pages
