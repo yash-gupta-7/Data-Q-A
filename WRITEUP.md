@@ -1,6 +1,10 @@
 # Data Q&A — Architecture, Decisions & Future Roadmap
 *Final Submission Write-Up (1-Page Summary)*
 
+- 🌐 **Live Web App:** [https://yash-gupta-7.github.io/Data-Q-A/](https://yash-gupta-7.github.io/Data-Q-A/)
+- ⚙️ **Production Backend API:** [https://data-q-a.onrender.com](https://data-q-a.onrender.com) ([Swagger Docs](https://data-q-a.onrender.com/docs))
+- 📦 **Source Repository:** [https://github.com/yash-gupta-7/Data-Q-A](https://github.com/yash-gupta-7/Data-Q-A)
+
 ---
 
 ## 1. Approach & Technical Architecture

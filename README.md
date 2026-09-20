@@ -4,17 +4,31 @@
 
 **An enterprise-grade conversational data analysis platform that turns multi-file CSV and Excel datasets into verified numerical answers, rich interactive visualizations, and full analytical provenance.**
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![DuckDB](https://img.shields.io/badge/DuckDB-In--Memory_OLAP-FFF000.svg?style=for-the-badge&logo=duckdb&logoColor=black)](https://duckdb.org)
-[![React](https://img.shields.io/badge/React-18+-61DAFB.svg?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
-[![Google Gemini](https://img.shields.io/badge/LLM-Gemini_Flash-8E75B2.svg?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![Tests](https://img.shields.io/badge/Tests-94_Passing-brightgreen.svg?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_App-GitHub_Pages-2ea44f?style=for-the-badge)](https://yash-gupta-7.github.io/Data-Q-A/)
+[![Backend API](https://img.shields.io/badge/⚙️_Backend_API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://data-q-a.onrender.com)
+[![API Docs](https://img.shields.io/badge/📖_Swagger_Docs-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://data-q-a.onrender.com/docs)
+
+<br/>
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB.svg?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![DuckDB](https://img.shields.io/badge/DuckDB-In--Memory_OLAP-FFF000.svg?style=flat-square&logo=duckdb&logoColor=black)](https://duckdb.org)
+[![React](https://img.shields.io/badge/React-18+-61DAFB.svg?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Google Gemini](https://img.shields.io/badge/LLM-Gemini_Flash-8E75B2.svg?style=flat-square&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![Tests](https://img.shields.io/badge/Tests-94_Passing-brightgreen.svg?style=flat-square)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
 </div>
+
+---
+
+## 🌐 Live Prototype & Hosted Links
+
+- 🖥️ **Live Web Application (Frontend):** [https://yash-gupta-7.github.io/Data-Q-A/](https://yash-gupta-7.github.io/Data-Q-A/)
+- ⚙️ **Production Backend API:** [https://data-q-a.onrender.com](https://data-q-a.onrender.com)
+- 📖 **Interactive Swagger / OpenAPI Docs:** [https://data-q-a.onrender.com/docs](https://data-q-a.onrender.com/docs)
 
 ---
 
@@ -56,7 +70,7 @@ Traditional LLM data agents frequently suffer from:
 
 | # | Deliverable | Description & Access |
 |---|---|---|
-| **1** | 🖥️ **Working Prototype** | • **Frontend:** `http://localhost:5173`<br>• **Backend API & Swagger:** `http://localhost:8000/docs`<br>• Step-by-step [Quick Start](#-quick-start) for local & Docker. |
+| **1** | 🖥️ **Working Prototype** | • **Hosted App:** [https://yash-gupta-7.github.io/Data-Q-A/](https://yash-gupta-7.github.io/Data-Q-A/)<br>• **Backend API:** [https://data-q-a.onrender.com](https://data-q-a.onrender.com) ([Swagger Docs](https://data-q-a.onrender.com/docs))<br>• Local instructions available below. |
 | **2** | 📦 **Source Code Repository** | Complete, clean Git repository containing frontend, backend, test suite, and CI workflows. |
 | **3** | 📝 **1-Page Architecture Write-Up** | [WRITEUP.md](WRITEUP.md) covering approach, design decisions, trade-offs, and future roadmap. |
 | **4** | 📊 **Sample Datasets & Queries** | [sample_data/](sample_data/) with `customers.csv`, `orders.csv`, and multi-sheet `products.xlsx`. |
@@ -124,21 +138,13 @@ Traditional LLM data agents frequently suffer from:
 | **Backend Engine** | Python 3.11+, FastAPI, Pydantic v2 | High-performance asynchronous API framework with type safety and automatic OpenAPI schema generation. |
 | **Analytical OLAP** | DuckDB, Pandas, OpenPyXL | Fast in-memory columnar database with zero overhead, rich SQL-92 support, window functions, and cross-file joins. |
 | **AI / LLM** | Google Gemini API (`gemini-2.5-flash` / `gemini-1.5-flash`) | Sub-second latency, structured JSON output mode, superior reasoning for semantic intent translation. |
-| **Frontend UI** | React 18, TypeScript, Vite, TailwindCSS | Ultra-fast SPA with reactive state management, typed client models, and fluid animations. |
+| **Frontend UI** | React 18, TypeScript, Vite, TailwindCSS | Ultra-fast SPA with reactive state management, typed client models, and fluid animations. Hosted on GitHub Pages. |
 | **Visualizations** | Recharts, Lucide Icons | Responsive, accessible, SVG-based charting components (Bar, Line, Area, Scatter, Pie). |
-| **DevOps & Testing** | Docker, Docker Compose, Pytest, Pytest-Asyncio | Hermetic containerization, 94 automated tests covering unit, security, integration, and E2E evaluation. |
+| **DevOps & Testing** | Docker, Docker Compose, Pytest, Render, GitHub Actions | Hermetic containerization, 94 automated tests covering unit, security, integration, and E2E evaluation. |
 
 ---
 
 ## 🚀 Quick Start
-
-### Prerequisites
-- **Python 3.11+**
-- **Node.js 18+** & **npm**
-- **Google Gemini API Key** ([Get a free key here](https://aistudio.google.com/))
-- *(Optional)* Docker & Docker Compose
-
----
 
 ### Option 1: Local Development Setup (Recommended)
 
@@ -206,14 +212,14 @@ Access the application at [http://localhost:5173](http://localhost:5173).
 | `GEMINI_API_KEY` | Google Gemini API key | `AIzaSy...` | ✅ Yes |
 | `GEMINI_MODEL` | Gemini model variant | `gemini-2.5-flash` | ❌ No |
 | `SECRET_KEY` | Session signing secret | `your-secret-key` | ❌ No |
-| `ALLOWED_ORIGINS` | CORS allowed origins | `http://localhost:5173` | ❌ No |
+| `ALLOWED_ORIGINS` | CORS allowed origins | `http://localhost:5173,https://yash-gupta-7.github.io` | ❌ No |
 | `MAX_FILE_SIZE_MB` | Upload file size ceiling | `50` | ❌ No |
 | `SESSION_TTL_MINUTES` | In-memory session cleanup TTL | `60` | ❌ No |
 
 ### Frontend (`frontend/.env`)
 | Variable | Description | Default | Required |
 |---|---|---|---|
-| `VITE_API_URL` | Base URL for the FastAPI backend | `http://localhost:8000` | ❌ No |
+| `VITE_API_URL` | Base URL for the FastAPI backend | `https://data-q-a.onrender.com` (or `http://localhost:8000`) | ❌ No |
 
 ---
 
@@ -355,6 +361,9 @@ Data-Q-A/
 
 ## 📄 Documentation & Links
 
+- 🌐 [Live Web App (GitHub Pages)](https://yash-gupta-7.github.io/Data-Q-A/)
+- ⚙️ [Live Backend API (Render)](https://data-q-a.onrender.com)
+- 📖 [Swagger API Documentation](https://data-q-a.onrender.com/docs)
 - 📝 [WRITEUP.md](WRITEUP.md) — 1-Page Submission Write-up
 - 🏛️ [docs/architecture.md](docs/architecture.md) — Deep Architecture Specification
 - 📡 [docs/api-spec.md](docs/api-spec.md) — REST API Endpoints Specification
