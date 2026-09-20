@@ -63,7 +63,7 @@ def parse_csv(file_bytes: bytes, filename: str) -> pd.DataFrame:
         CSVParseError: If decoding, parsing, or validation fails.
     """
     # 1. Encoding detection
-    for encoding in ("utf-8-sig", "utf-8", "latin-1", "cp1252"):
+    for encoding in ("utf-8-sig", "utf-8", "cp1252"):
         try:
             text = file_bytes.decode(encoding)
             logger.debug("Decoded '%s' using %s encoding", filename, encoding)
@@ -72,7 +72,7 @@ def parse_csv(file_bytes: bytes, filename: str) -> pd.DataFrame:
             continue
     else:
         raise CSVParseError(
-            f"Could not decode '{filename}' with any supported encoding (utf-8, latin-1, cp1252).",
+            f"Could not decode '{filename}' with any supported encoding (utf-8, cp1252).",
             filename=filename,
         )
 
