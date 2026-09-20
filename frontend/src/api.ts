@@ -1,8 +1,32 @@
 import axios from 'axios';
 
-const BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+export const getApiBaseUrl = (): string => {
+  const custom = localStorage.getItem('API_BASE_URL');
+  if (custom && custom.trim()) {
+    return custom.trim().replace(/\/+$/, '');
+  }
+  return (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1').replace(/\/+$/, '');
+};
 
-const api = axios.create({ baseURL: BASE });
+export const setApiBaseUrl = (url: string) => {
+  if (url) {
+    let clean = url.trim().replace(/\/+$/, '');
+    if (!clean.endsWith('/api/v1')) {
+      clean = `${clean}/api/v1`;
+    }
+    localStorage.setItem('API_BASE_URL', clean);
+  } else {
+    localStorage.removeItem('API_BASE_URL');
+  }
+};
+
+const api = axios.create();
+
+api.interceptors.request.use((config) => {
+  config.baseURL = getApiBaseUrl();
+  return config;
+});
+
 
 export type Dataset = {
   dataset_id: string;
@@ -131,5 +155,11 @@ export const removeDataset = async (sessionId: string, datasetId: string): Promi
 
 export const submitQuery = async (sessionId: string, question: string): Promise<QueryResponse> => {
   const res = await api.post(`/sessions/${sessionId}/queries`, { question });
+  if (!res.data.success) {
+    throw new Error(res.data.error?.message || 'Query failed. Please try again.');
+  }
+  if (!res.data.data) {
+    throw new Error('No data received from server.');
+  }
   return res.data.data as QueryResponse;
 };
