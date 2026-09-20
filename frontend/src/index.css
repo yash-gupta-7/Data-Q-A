@@ -502,6 +502,25 @@ html, body, #root {
   font-family: 'JetBrains Mono', monospace;
 }
 
+/* ── Processing stages ── */
+.r-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border);
+}
+
+.r-stage-tag {
+  font-size: 11px;
+  color: var(--text-3);
+  background: var(--bg-1);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
 /* ── Answer text ── */
 .r-answer {
   padding: 14px 16px;

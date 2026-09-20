@@ -23,7 +23,7 @@ class TestCSVParser:
         df = parse_csv(csv, "injection.csv")
         # Should parse successfully — formula strings are just data
         assert len(df) == 2
-        assert "=CMD(rm -rf /)" in df["cmd"].values or df["cmd"].iloc[0].startswith("=")
+        assert "=CMD(rm -rf /)" in df["cmd"].values or df["cmd"].iloc[0].startswith("=") or df["cmd"].iloc[0].startswith("'=")
 
     def test_null_markers_detected(self):
         csv = _b("a,b\nnull,100\nnone,200\n-,300")

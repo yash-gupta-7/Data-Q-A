@@ -84,6 +84,7 @@ async def submit_query(session_id: str, body: QueryRequest):
             )
             session._planner_cache[cache_key] = plan
             stages.append("✓ Built analytical plan")
+        logger.info("Analytical Plan:\n%s", plan.model_dump_json(indent=2))
     except LLMError as e:
         session.conversation.add_assistant_message(
             "I'm having trouble connecting to the AI model. Please check the LLM configuration."
@@ -137,10 +138,11 @@ async def submit_query(session_id: str, body: QueryRequest):
     stages.append("✓ Validated analytical plan")
 
     # ── Step 3: SQL Compilation ───────────────────────────────────────────
-    compiler = SQLCompiler(active_datasets)
+    compiler = SQLCompiler(active_datasets, session.relationships)
     compiled = None
     try:
         compiled = compiler.compile(plan)
+        logger.info("Compiled SQL:\n%s", compiled.sql)
         stages.append("✓ Compiled query")
     except SQLCompileError as e:
         evidence = compute_evidence_score(plan, None, None, plan_validation, None, False)
@@ -185,7 +187,7 @@ async def submit_query(session_id: str, body: QueryRequest):
             processing_stages=stages,
         )
         session.conversation.add_assistant_message(f"Query failed: {e.message}", response)
-        return err(e.code, e.message)
+        return ok(response.model_dump())
 
     # ── Step 6: Result Validation ─────────────────────────────────────────
     result_validation = validate_result(result, plan)

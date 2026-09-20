@@ -157,7 +157,7 @@ export const ResponseCard: React.FC<Props> = ({ response }) => {
       <div className="r-table-wrap">
         <table className="r-table">
           <thead>
-            <tr>{cols.map(c => <th key={c.name}>{c.name.replace(/_/g, ' ')}</th>)}</tr>
+            <tr>{cols.map((c, i) => <th key={`${c.name}-${i}`}>{c.name.replace(/_/g, ' ')}</th>)}</tr>
           </thead>
           <tbody>
             {rows.map((row, i) => (
@@ -192,10 +192,23 @@ export const ResponseCard: React.FC<Props> = ({ response }) => {
         <span className={`r-badge ${badgeClass}`}>{badgeLabel}</span>
       </div>
 
-      {/* Answer */}
-      {explanation?.answer && (
-        <div className="r-answer">{explanation.answer}</div>
+      {/* Processing stages */}
+      {_stages && _stages.length > 0 && (
+        <div className="r-stages">
+          {_stages.map((st, i) => (
+            <span key={i} className="r-stage-tag">{st}</span>
+          ))}
+        </div>
       )}
+
+      {/* Answer */}
+      {explanation?.answer ? (
+        <div className="r-answer">{explanation.answer}</div>
+      ) : !result ? (
+        <div className="r-answer" style={{ color: 'var(--text-2)' }}>
+          {validation?.blocking_reason || 'Analysis complete. No quantitative data returned.'}
+        </div>
+      ) : null}
 
       {/* Key points */}
       {(explanation?.key_points?.length ?? 0) > 0 && (

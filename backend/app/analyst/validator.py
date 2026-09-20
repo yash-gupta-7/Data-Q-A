@@ -14,6 +14,7 @@ from app.models.plan import (
     FilterOperation,
     GroupByOperation,
     JoinOperation,
+    SelectOperation,
     TrendOperation,
 )
 from app.models.result import ValidationCheck, ValidationResult, ValidationStatus
@@ -95,6 +96,29 @@ class PlanValidator:
                         name=f"{op_name}:group_column:{col_name}",
                         passed=found,
                         message=None if found else f"Group-by column '{col_name}' not found.",
+                    ))
+
+            elif isinstance(op, SelectOperation):
+                agg_aliases = {
+                    getattr(o, "alias", None) or f"{getattr(o, 'function', '').value.lower()}_{getattr(o, 'column', '')}"
+                    for o in plan.operations if isinstance(o, AggregateOperation)
+                }
+                for col_name in op.columns:
+                    if col_name in agg_aliases:
+                        continue
+                    ds_id = getattr(op, "dataset", None)
+                    if ds_id:
+                        col = self._get_column(ds_id, col_name)
+                        found = col is not None
+                    else:
+                        found = any(
+                            self._get_column(ds_id2, col_name) is not None
+                            for ds_id2 in plan.datasets
+                        )
+                    checks.append(ValidationCheck(
+                        name=f"{op_name}:select_column:{col_name}",
+                        passed=found,
+                        message=None if found else f"Select column '{col_name}' not found.",
                     ))
 
             elif isinstance(op, JoinOperation):

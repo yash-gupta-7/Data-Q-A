@@ -82,8 +82,9 @@ class SQLCompiler:
     The LLM never controls executable SQL directly.
     """
 
-    def __init__(self, datasets: list[Dataset]):
+    def __init__(self, datasets: list[Dataset], relationships: list[Any] | None = None):
         self._ds_map = {d.dataset_id: d for d in datasets}
+        self._relationships = relationships or []
 
     def _table(self, dataset_id: str) -> str:
         ds = self._ds_map.get(dataset_id)
@@ -95,7 +96,7 @@ class SQLCompiler:
         """Return qualified column ref, optionally table-prefixed."""
         if dataset_id:
             ds = self._ds_map.get(dataset_id)
-            if ds:
+            if ds and any(c.name == col_name for c in ds.columns):
                 return f"{_quote_identifier(ds.internal_table_name)}.{_quote_identifier(col_name)}"
         # Single dataset — no prefix needed
         if len(plan_datasets) == 1:
@@ -232,12 +233,48 @@ class SQLCompiler:
             raise SQLCompileError("No datasets in plan.")
 
         # FROM clause
+        if not joins and len(plan.datasets) > 1 and self._relationships:
+            auto_joins = []
+            seen_ds = {plan.datasets[0]}
+            for ds_id in plan.datasets[1:]:
+                for rel in self._relationships:
+                    if rel.left_dataset in seen_ds and rel.right_dataset == ds_id:
+                        auto_joins.append(JoinOperation(
+                            left_dataset=rel.left_dataset,
+                            left_column=rel.left_column,
+                            right_dataset=rel.right_dataset,
+                            right_column=rel.right_column,
+                            join_type="LEFT",
+                        ))
+                        seen_ds.add(ds_id)
+                        break
+                    elif rel.right_dataset in seen_ds and rel.left_dataset == ds_id:
+                        auto_joins.append(JoinOperation(
+                            left_dataset=rel.right_dataset,
+                            left_column=rel.right_column,
+                            right_dataset=rel.left_dataset,
+                            right_column=rel.left_column,
+                            join_type="LEFT",
+                        ))
+                        seen_ds.add(ds_id)
+                        break
+            if auto_joins:
+                joins = auto_joins
+
         if joins:
             from_clause, join_clauses = self._build_joins(joins, plan.datasets, ops_summary)
         else:
             from_clause = self._table(primary_ds)
             join_clauses = ""
             datasets_used.append(primary_ds)
+
+        # Collect aggregate aliases and metric columns
+        agg_aliases: set[str] = set()
+        for agg in aggregates:
+            alias = agg.alias or f"{agg.function.value.lower()}_{agg.column}"
+            agg_aliases.add(alias)
+
+        selected_cols: set[str] = set()
 
         # DATE_GROUP columns → added to SELECT and GROUP BY
         for dg in date_groups:
@@ -250,24 +287,36 @@ class SQLCompiler:
             columns_used.append(dg.column)
             ops_summary.append(f"DATE_TRUNC({dg.unit.value}, {dg.column})")
             alias_map[alias] = alias
+            selected_cols.add(alias)
+            selected_cols.add(dg.column)
 
-        # GROUP_BY from operations
+        # GROUP_BY from operations (deduplicated)
         all_group_by = list(plan.group_by)
         for gbo in group_by_ops:
             all_group_by.extend(gbo.columns)
 
+        seen_gb: set[str] = set()
         for col_name in all_group_by:
+            if col_name in seen_gb:
+                continue
+            seen_gb.add(col_name)
             col = self._resolve_column(col_name, None, plan.datasets)
             select_parts.append(f"{col} AS {_quote_identifier(col_name)}")
             group_by_cols.append(col)
             columns_used.append(col_name)
+            selected_cols.add(col_name)
 
         # SELECT columns
         for sel in selects:
             for col_name in sel.columns:
+                if col_name in agg_aliases or col_name in selected_cols:
+                    continue
+                if aggregates and col_name not in seen_gb:
+                    continue
                 col = self._resolve_column(col_name, sel.dataset, plan.datasets)
                 select_parts.append(f"{col} AS {_quote_identifier(col_name)}")
                 columns_used.append(col_name)
+                selected_cols.add(col_name)
 
         # AGGREGATE expressions
         for agg in aggregates:
@@ -282,6 +331,7 @@ class SQLCompiler:
             select_parts.append(expr)
             columns_used.append(col_name)
             ops_summary.append(f"{agg.function.value}({col_name})")
+            selected_cols.add(alias)
 
         # If no select at all, do SELECT *
         if not select_parts:
